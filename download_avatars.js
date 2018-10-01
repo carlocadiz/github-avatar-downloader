@@ -3,21 +3,16 @@ var request = require('request');
 var token = require('./secrets');
 var fs = require('fs');
 
-/*fs.stat('avatars' , function( err, stats) {
-  if ( err ) {
-    fs.mkdir('avatars/');
-  }
-
-});
-*/
+// checks to see if avatar folder exist. if not, creates the folder.
 if (!fs.existsSync('avatars/')) {
     fs.mkdir('avatars/');
 }
+
 console.log('Welcome to the GitHub Avatar Downloader!');
 
 
 
-
+// function will accept repo owner and name and function parameter for callback function
 function getRepoContributors(repoOwner, repoName, cb) {
 
   var options = {
@@ -27,13 +22,17 @@ function getRepoContributors(repoOwner, repoName, cb) {
       'Authorization' : 'token ' + token.GITHUB_TOKEN
     }
   };
-
+  // parses the body into a readable JSON format
   request(options, function(err, res, body) {
     var data = JSON.parse(body);
+    console.log(typeof(data));
     cb(err, data);
   });
 }
 
+//callback function to cycle through data object and calls downloadImageByURL function sending each elements avatar URL and concatinating
+// file path using login name.
+//
 function getContributerUrl( err, data ){
 
   data.forEach(function(element){
@@ -41,6 +40,7 @@ function getContributerUrl( err, data ){
     })
 }
 
+//function will save an avatar image for parameter 'url' into location  parameter 'filepath'
 function downloadImageByURL(url, filePath) {
   request.get(url)
        .on('error', function (err) {
@@ -60,10 +60,11 @@ function downloadImageByURL(url, filePath) {
 
 }
 
+// requires two command line arguements to exist. If not and error message is displayed and system exists.
 if (argv.length === 2){
   getRepoContributors(argv[0], argv[1], getContributerUrl);
 } else {
-  console.log("Missing parameter - shutting down");
-  process.exit;
+    console.log("Missing parameter - shutting down");
+    process.exit;
 }
 
