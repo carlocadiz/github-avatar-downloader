@@ -1,3 +1,5 @@
+
+
 # Logs
 logs
 *.log
@@ -72,4 +74,4 @@ typings/
 # Serverless directories
 .serverless
 
-secret.js
+secrets.js
