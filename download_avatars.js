@@ -1,9 +1,21 @@
+var argv = process.argv.slice(2);
 var request = require('request');
 var token = require('./secrets');
 var fs = require('fs');
 
+/*fs.stat('avatars' , function( err, stats) {
+  if ( err ) {
+    fs.mkdir('avatars/');
+  }
 
+});
+*/
+if (!fs.existsSync('avatars/')) {
+    fs.mkdir('avatars/');
+}
 console.log('Welcome to the GitHub Avatar Downloader!');
+
+
 
 
 function getRepoContributors(repoOwner, repoName, cb) {
@@ -32,6 +44,7 @@ function getContributerUrl( err, data ){
 function downloadImageByURL(url, filePath) {
   request.get(url)
        .on('error', function (err) {
+         //fs.mkdir('avatars/');
          throw err;
        })
        .on('response', function (response) {
@@ -43,7 +56,14 @@ function downloadImageByURL(url, filePath) {
 
        .pipe(fs.createWriteStream(filePath));
 
-}
-getRepoContributors("jquery", "jquery", getContributerUrl);
 
+
+}
+
+if (argv.length === 2){
+  getRepoContributors(argv[0], argv[1], getContributerUrl);
+} else {
+  console.log("Missing parameter - shutting down");
+  process.exit;
+}
 
