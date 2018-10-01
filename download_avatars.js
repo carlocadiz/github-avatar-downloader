@@ -12,27 +12,25 @@ function getRepoContributors(repoOwner, repoName, cb) {
     url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
     headers: {
       'User-Agent': 'request',
-      'Authorization' : token.GITHUB_TOKEN
+      'Authorization' : 'token ' + token.GITHUB_TOKEN
     }
   };
 
   request(options, function(err, res, body) {
     var data = JSON.parse(body);
-   // console.log('getRepo');
     cb(err, data);
   });
 }
 
 function getContributerUrl( err, data ){
-  //const fileName = `avatars/${element.login}.jpg`;
+
   data.forEach(function(element){
       downloadImageByURL(element.avatar_url, `avatars/${element.login}.jpg`);
     })
 }
 
 function downloadImageByURL(url, filePath) {
- // console.log(url, filePath);
-  request(url)
+  request.get(url)
        .on('error', function (err) {
          throw err;
        })
