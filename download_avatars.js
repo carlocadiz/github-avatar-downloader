@@ -43,21 +43,17 @@ function getContributerUrl( err, data ){
 //function will save an avatar image for parameter 'url' into location  parameter 'filepath'
 function downloadImageByURL(url, filePath) {
   request.get(url)
-       .on('error', function (err) {
-         //fs.mkdir('avatars/');
-         throw err;
-       })
-       .on('response', function (response) {
-         console.log('Response Status Code: ', response.statusCode);
-       })
-       .on('end', function() {
-        console.log("Download complete");
-      })
+    .on('error', function (err) {
+      throw err;
+    })
+    .on('response', function (response) {
+      console.log('Response Status Code: ', response.statusCode);
+    })
+    .on('end', function() {
+      console.log("Download complete");
+    })
 
-       .pipe(fs.createWriteStream(filePath));
-
-
-
+    .pipe(fs.createWriteStream(filePath));
 }
 
 // requires two command line arguements to exist. If not and error message is displayed and system exists.
